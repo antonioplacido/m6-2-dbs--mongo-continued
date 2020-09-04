@@ -23,4 +23,28 @@ const getSeats = async (req, res) => {
   return seats;
 };
 
-module.exports = { getSeats };
+const bookSeats = async (req, res) => {
+  const _id = req.body.seatId;
+  const client = await MongoClient(MONGO_URI, (MONGO_URI, options));
+  try {
+    await client.connect();
+    const db = client.db("workshop_6");
+    const registration = {
+      $set: { isBooked: true, user: req.body.fullName, email: req.body.email },
+    };
+    if (req.body === undefined) {
+      throw new Error("Missing info");
+    }
+    console.log("req.body.seatId", _id);
+    const greetings = await db
+      .collection("seats")
+      .updateOne({ _id }, registration);
+    res.status(200).json({ status: 200, data: { _id } });
+  } catch (err) {
+    res
+      .status(500)
+      .json({ status: 500, data: { ...req.body }, message: err.message });
+  }
+  client.close();
+};
+module.exports = { getSeats, bookSeats };
