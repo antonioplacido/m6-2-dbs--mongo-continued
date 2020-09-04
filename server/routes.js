@@ -10,26 +10,6 @@ const options = {
   useUnifiedTopology: true,
 };
 
-// const batchImport = async () => {
-//   try {
-//     const client = await MongoClient(MONGO_URI, options);
-
-//     await client.connect();
-
-//     const db = client.db("workshop_6");
-
-//     const r = await db.collection("seats").insertMany(exportSeats);
-
-//     assert.equal(1, r.insertedCount);
-
-//     client.close();
-//   } catch ({ message }) {
-//     console.log(message);
-//   }
-// };
-
-// batchImport();
-
 router.get("/api/seat-availability", getSeats);
 
 const getRowName = (rowIndex) => {
@@ -48,7 +28,6 @@ const randomlyBookSeats = (num) => {
 };
 let state;
 
-let lastBookingAttemptSucceeded = false;
-
 router.post("/api/book-seat", bookSeats);
+
 module.exports = router;

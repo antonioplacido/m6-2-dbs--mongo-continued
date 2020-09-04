@@ -30,15 +30,20 @@ const bookSeats = async (req, res) => {
     await client.connect();
     const db = client.db("workshop_6");
     const registration = {
-      $set: { isBooked: true, user: req.body.fullName, email: req.body.email },
+      //now we have complete booking gg.
+      $set: {
+        isBooked: true,
+        user: req.body.fullName,
+        email: req.body.email,
+        creditCard: req.body.creditCard,
+        expiration: req.body.expiration,
+      },
     };
     if (req.body === undefined) {
       throw new Error("Missing info");
     }
     console.log("req.body.seatId", _id);
-    const greetings = await db
-      .collection("seats")
-      .updateOne({ _id }, registration);
+    const seats = await db.collection("seats").updateOne({ _id }, registration);
     res.status(200).json({ status: 200, data: { _id } });
   } catch (err) {
     res
@@ -47,4 +52,5 @@ const bookSeats = async (req, res) => {
   }
   client.close();
 };
+
 module.exports = { getSeats, bookSeats };
